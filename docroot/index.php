@@ -1,3 +1,9 @@
+<? require_once(dirname($_SERVER{'DOCUMENT_ROOT'}) . '/lib/config.php'); ?>
+<? require_once(dirname($_SERVER{'DOCUMENT_ROOT'}) . '/lib/db_pdo.php'); ?>
+<?
+$db_conn = create_pdo_connection($DB_CONNECT_STRING, $DB_USERNAME, $DB_PASSWORD);
+$games = get_game_list($db_conn);
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -16,6 +22,16 @@
       float: right;
       clear: left;
       }
+      div.game_list {
+      font-size: 24px;
+      min-height: 100%;
+      max-height: 200px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      }
+      .venue_address {
+      font-size: 16px;
+      }
     </style>
   </head>
   <body>
@@ -33,14 +49,65 @@
     </div>
     <div id="schedule">
       <h1>Where And When?</h1>
-      <p>
-        <a href="http://tommydoyles.com/locations/kendall-square/">Tommy Doyle's</a>
-        in Kendall Square, Cambridge, on Monday, August 11th, at 6:45pm. 
-      </p>
-      <p>
-        We'll be starting at 6:45, but if you arrive a few minutes late we'll make it such that you can catch up.
-        Join us!
-      </p>
+      <div class="game_list">
+        <table>
+          <tr>
+            <th>Where?</th>
+            <th>When?</th>
+          </tr>
+<?
+   $display_time = new DateTime();
+   foreach($games as $game) {
+      $game_date = new DateTime($game['start_time']);
+     if ($game_date > $display_time) {
+?>
+          <tr>
+            <td>
+              <?=$game['venue_name']?><br />
+              <span class="venue_address"><?=$game['street1']?>&nbsp;<?=$game['street2']?>&nbsp;<?=$game['city']?></span>
+            </td>
+            <td>
+              <?=$game['start_time']?>
+            </td>
+          </tr>
+<?
+     }
+   }
+?>
+        </table>
+      </div>
+      <h1>Previous Games</h1>
+      <div class="game_list">
+        <table>
+          <tr>
+            <th>Where?</th>
+            <th>When?</th>
+            <th>Results</th>
+          </tr>
+<?
+   $display_time = new DateTime();
+   foreach($games as $game) {
+      $game_date = new DateTime($game['start_time']);
+     if ($game_date < $display_time) {
+?>
+          <tr>
+            <td>
+              <?=$game['venue_name']?><br />
+              <span class="venue_address"><?=$game['street1']?>&nbsp;<?=$game['street2']?>&nbsp;<?=$game['city']?></span>
+            </td>
+            <td>
+              <?=$game['start_time']?>
+            </td>
+            <td>
+              <a href="/game_status.php?game_id=<?= $game['id'] ?>">See Results</a>
+            </td>
+          </tr>
+<?
+     }
+   }
+?>
+        </table>
+      </div>
     </div>
     <div id="footer">
       <p>
