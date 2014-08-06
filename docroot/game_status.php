@@ -14,65 +14,10 @@ $venue = $games[0]['venue_name'];
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link href="http://fonts.googleapis.com/css?family=VT323" rel="stylesheet" type="text/css" />
     <link href="/style/site-style.css" type="text/css" rel="stylesheet" />
-    <style>
-     body {
-       font-size: 12pt;
-     }
-     .questions {
-       margin:0px;padding:0px;
-       border:0px solid #000000;
-     }
-     .questions td{
-       vertical-align:top;
-       text-align:left;
-       padding:1px;
-       color:#000000;
-     }
-     .questions td.round{
-       text-align: right;
-     }
-     .questions td.number {
-       text-align: center;
-     }
-     .questions td.clue,td.category {
-       position: relative;
-     }
-     .questions td.clue:hover {
-       background-color: #afafaf;
-     }
-     .questions td.rstyle1 {
-       background-color: #dfdfdf;
-     }
-     .questions td.rstyle0 {
-       background-color: #cacaca;
-     }
-     div.answer {
-       background-color: yellow;
-       max-width: 300px;
-       display: none;
-       position: absolute;
-       top: +90%;
-       right: +10%;
-       padding: 10px;
-       z-index: 2;
-     }
-     .questions td.clue:hover div.answer {
-       display: block;
-     }
-     .questions ul,ol {
-       margin: 0px;
-     }
-     td.result1 {
-       color: #00ff00;
-     }
-     td.result0 {
-       color: #ff0000;
-     }
-    </style>
   </head>
   <body>
     <div id="intro">
-      <h1>Nerd Pub Trivia!</h1>
+      <h1><a href="/">Nerd Pub Trivia!</a></h1>
       <p>Game Results for <?= $game_date->format('l, F jS, Y') ?> at <?= $venue ?></p>
     </div>
     <div id="questions">
@@ -119,9 +64,9 @@ $venue = $games[0]['venue_name'];
                             printf('&nbsp;(%d)', $clue['clue_bounty']);
                           }
                           ?></li>
-                               </ul>
                     <?
                     }
+                    ?></ol><?
                     }
                     }
                     ?>
@@ -159,6 +104,7 @@ $venue = $games[0]['venue_name'];
             ?><th colspan="<?=count($questions)?>">Round <?= $round ?></th><?
           }
           ?>
+          <th>&nbsp;</th>
         </tr>
         <tr>
           <th class="team_name">Team Name</th>
@@ -175,7 +121,7 @@ $venue = $games[0]['venue_name'];
             }
           }
           ?>
-          <th>Score</th>
+          <th class="team_score">Score</th>
         </tr>
         <?
         $game_results = get_game_detail($db_conn, $game_id);
@@ -229,7 +175,7 @@ $venue = $games[0]['venue_name'];
               }
             }
           }
-          ?><td><?= $score ?></td><?
+          ?><td class="team_score"><?= $score ?></td><?
         }
         ?>
       </table>
@@ -241,6 +187,11 @@ $venue = $games[0]['venue_name'];
       <p>
         <a href="http://validator.w3.org/check?uri=referer" target="validator">
           <img src="/images/valid-html5.png" alt="Valid HTML" height="31" width="88" /></a>
+        <a href="http://jigsaw.w3.org/css-validator/check/referer" target="validator">
+          <img style="border:0;width:88px;height:31px"
+               src="http://jigsaw.w3.org/css-validator/images/vcss-blue"
+               alt="Valid CSS!" />
+        </a>
       </p>
     </div>
     <script type="text/javascript">

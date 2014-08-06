@@ -15,25 +15,6 @@ $games = get_game_list($db_conn);
       body {
       font-size: 32px;
       }
-      h1 {
-      font-size: 64px;
-      }
-      div#intro img {
-      float: right;
-      clear: left;
-      }
-      div.game_list {
-      font-size: 24px;
-      min-height: 100%;
-      max-height: 200px;
-      overflow-y: auto;
-      overflow-x: hidden;
-          max-width: 100%;
-          min-width: 100%;
-      }
-      .venue_address {
-      font-size: 16px;
-      }
     </style>
   </head>
   <body>
@@ -118,6 +99,11 @@ $games = get_game_list($db_conn);
       <p>
         <a href="http://validator.w3.org/check?uri=referer" target="validator">
           <img src="/images/valid-html5.png" alt="Valid HTML" height="31" width="88" /></a>
+        <a href="http://jigsaw.w3.org/css-validator/check/referer" target="validator">
+          <img style="border:0;width:88px;height:31px"
+               src="http://jigsaw.w3.org/css-validator/images/vcss-blue"
+               alt="Valid CSS!" />
+        </a>
       </p>
     </div>
     <script type="text/javascript">
