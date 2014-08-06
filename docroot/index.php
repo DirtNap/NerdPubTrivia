@@ -28,6 +28,8 @@ $games = get_game_list($db_conn);
       max-height: 200px;
       overflow-y: auto;
       overflow-x: hidden;
+          max-width: 100%;
+          min-width: 100%;
       }
       .venue_address {
       font-size: 16px;
