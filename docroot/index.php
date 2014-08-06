@@ -11,6 +11,7 @@ $games = get_game_list($db_conn);
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link href="http://fonts.googleapis.com/css?family=VT323" rel="stylesheet" type="text/css" />
     <link href="/style/site-style.css" type="text/css" rel="stylesheet" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <style>
       body {
       font-size: 32px;
@@ -94,7 +95,8 @@ $games = get_game_list($db_conn);
     </div>
     <div id="footer">
       <p>
-        <a href="http://twitter.com/NerdPubTrivia">Follow @NerdPubTrivia on Twitter!</a>
+        <a href="http://twitter.com/NerdPubTrivia">Follow @NerdPubTrivia on Twitter!</a><br />
+        <span id="next_game"></span>
       </p>
       <p>
         <a href="http://validator.w3.org/check?uri=referer" target="validator">
@@ -117,6 +119,10 @@ $games = get_game_list($db_conn);
       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
+     $.get( "/next_game.php", function( data ) {
+       var game = JSON.parse(data);
+       $( "#next_game" ).html('Next game on ' + game.start_time + ' at ' + game.venue_name);
+     });
 
     </script>
   </body>

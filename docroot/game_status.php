@@ -3,25 +3,43 @@
 <?
 $db_conn = create_pdo_connection($DB_CONNECT_STRING, $DB_USERNAME, $DB_PASSWORD);
 $game_id = intval($_GET['game_id']);
-$games = get_game_list($db_conn, $game_id);
-$game_date = new DateTime($games[0]['start_time']);
-$venue = $games[0]['venue_name'];
+$games = get_game_list($db_conn);
+$now = new DateTime();
+$datalist = '<datalist id="available_games">';
+foreach ($games as $game) {
+  $game_start_time = new DateTime($game['start_time']);
+  if ($game['id'] == $game_id) {
+    $game_date = $game_start_time;
+    $venue = $game['venue_name'];
+  }
+  if ($game_start_time < $now) {
+    $datalist .= sprintf('<option label="%s %s" value="%d" >',
+                         $game['venue_name'], $game_start_time->format('Y/m/d'), $game['id']);
+
+  }
+}
+$datalist .= '</datalist>';
 ?>
 <!DOCTYPE html>
 <html>
   <head>
-    <title>: Nerd Pub Trivia :: Game Status for <? printf('%s - %s', $venue, $game_date->format('l, F jS, Y')) ?> :</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>: Nerd Pub Trivia :: Game Status for <? printf('%s - %s', $venue, $game_date->format('l, F jS, Y')) ?> :</title>
     <link href="http://fonts.googleapis.com/css?family=VT323" rel="stylesheet" type="text/css" />
     <link href="/style/site-style.css" type="text/css" rel="stylesheet" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   </head>
   <body>
+    <?= $datalist ?>
     <div id="intro">
       <h1><a href="/">Nerd Pub Trivia!</a></h1>
       <p>Game Results for <?= $game_date->format('l, F jS, Y') ?> at <?= $venue ?></p>
+      <p>
+      Select a different game:  <input list="available_games" oninput="window.location.assign(location.pathname + '?game_id=' + this.value);" />
+      </p>
     </div>
     <div id="questions">
-      <? 
+      <?
       $question_list = get_game_questions($db_conn, $game_id); 
                                           $display_question_types = array('Standard', 'Countdown', 'Final');
                                           ?>
@@ -182,7 +200,8 @@ $venue = $games[0]['venue_name'];
     </div>
     <div id="footer">
       <p>
-        <a href="http://twitter.com/NerdPubTrivia">Follow @NerdPubTrivia on Twitter!</a>
+        <a href="http://twitter.com/NerdPubTrivia">Follow @NerdPubTrivia on Twitter!</a><br />
+        <span id="next_game"></span>
       </p>
       <p>
         <a href="http://validator.w3.org/check?uri=referer" target="validator">
@@ -205,7 +224,10 @@ $venue = $games[0]['venue_name'];
        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
      })();
-
+     $.get( "/next_game.php", function( data ) {
+       var game = JSON.parse(data);
+       $( "#next_game" ).html('Next game on ' + game.start_time + ' at ' + game.venue_name);
+     });
     </script>
   </body>
 </html>

@@ -5,6 +5,7 @@ body {
 h1 a {
     text-decoration: none;
     color: inherit;
+    min-width: 100%;
 }
 .questions {
     margin:0px;padding:0px;
@@ -81,4 +82,7 @@ div.game_list {
 }
 .team_name,.team_score {
     font-weight: bold;
+}
+span#next_game {
+    font-size: 10pt;
 }
